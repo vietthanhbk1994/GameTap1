@@ -1,0 +1,43 @@
+{
+  "name": "HelloGame",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.3",
+    "babel-jest": "^22.4.3",
+    "babel-plugin-module-resolver": "^3.1.1",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-preset-react-native": "^4.0.0",
+    "babel-preset-react-native-stage-0": "^1.0.1",
+    "eslint": "^4.19.1",
+    "eslint-plugin-prettier": "^2.6.0",
+    "eslint-plugin-react-app": "^3.0.0",
+    "flow-bin": "^0.71.0",
+    "jest-expo": "26.0.0",
+    "prettier": "^1.12.1",
+    "react-native-scripts": "1.13.2",
+    "react-test-renderer": "^16.3.2"
+  },
+  "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
+  "scripts": {
+    "start": "react-native-scripts start",
+    "eject": "react-native-scripts eject",
+    "android": "react-native-scripts android",
+    "ios": "react-native-scripts ios",
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "jest-expo"
+  },
+  "dependencies": {
+    "expo": "^26.0.0",
+    "lodash": "^4.17.10",
+    "mobx": "^4.2.1",
+    "mobx-react": "^5.1.2",
+    "react": "16.3.0",
+    "react-native": "~0.54.1",
+    "react-native-animatable": "^1.2.4",
+    "react-native-sound": "^0.10.9"
+  }
+}
