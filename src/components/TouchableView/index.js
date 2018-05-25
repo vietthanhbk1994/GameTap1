@@ -1,17 +1,10 @@
 // @flow
 /**
- * The ending score screen.
- * It's a simple screen, but it might seem complex in some part only because of animations.
+ * A simple cross platform component that handles the default touchable feedback.
  */
 import React, {Component} from 'react';
-import {View} from 'react-native-animatable';
-import {inject, observer} from 'mobx-react/native';
-import metrics from '../../config/metrics';
-import Tile from '../../components/Tile';
-import CustomText from '../../components/CustomText';
-import boardUtils from '../../utils/boardUtils';
-import audioService from '../../services/audio';
-import styles from './index.style';
+import {View, TouchableNativeFeedback, TouchableOpacity} from 'react-native';
+import env from '../../config/env';
 
 type Props = {
     navigateToPlayground: () => any,

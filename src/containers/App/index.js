@@ -41,7 +41,7 @@ export default class App extends Component<Props, Props, void> {
                 content = <Endgame/>;
                 break;
             default:
-                content = <View/>
+                content = <View/>;
                 break;
 
         }

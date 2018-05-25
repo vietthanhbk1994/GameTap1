@@ -1,16 +1,13 @@
 // @flow
 /**
- * The ending score screen.
- * It's a simple screen, but it might seem complex in some part only because of animations.
+ * React-Native `<Text />` component does not scale the text based on the device size.
+ * This component does, and it also provides a nice interface for using custom fonts and style.
  */
-import React, {Component} from 'react';
-import {View} from 'react-native-animatable';
-import {inject, observer} from 'mobx-react/native';
+import React, { Element } from 'react';
+import { StyleSheet } from 'react-native';
+import { Text } from 'react-native-animatable';
+import TouchableView from 'src/components/TouchableView';
 import metrics from '../../config/metrics';
-import Tile from '../../components/Tile';
-import CustomText from '../../components/CustomText';
-import boardUtils from '../../utils/boardUtils';
-import audioService from '../../services/audio';
 import styles from './index.style';
 
 type Props = {

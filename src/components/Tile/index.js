@@ -1,7 +1,8 @@
 // @flow
 /**
- * The ending score screen.
- * It's a simple screen, but it might seem complex in some part only because of animations.
+ * The Tile base component (used in HomeScreen and in Playground).
+ * It renders a square (the depth), and of top of it another square (the Tile itself) with a bit of
+ * space on bottom that get's halved when pressed.
  */
 import React, {Component} from 'react';
 import {View} from 'react-native-animatable';
