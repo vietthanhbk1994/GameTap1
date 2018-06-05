@@ -11,80 +11,37 @@ import metrics from '../../config/metrics';
 import styles from './index.style';
 
 type Props = {
-    navigateToPlayground: () => any,
-    score: number,
+    children?: string | Element<any>,
+    onPress?: Function,
+    withShadow?: boolean,
+    style?: any
 };
 
-type State = {
-    buttonColor: string,
-    hasPressedButton: boolean,
+const CustomText = (props: Props): Element<any> => {
+    const {onPress, style, children, withShadow, ...otherProps} = props;
+    const fontSize = StyleSheet.flatten(style).fontSize || 14;
+    const scaledFontSize = Math.round(fontSize * metrics.DEVICE_WIDTH / 375);
+    const shadowStyle = {
+        textShadowColor: 'rgba(0, 0, 0, 0.2)',
+        textShadowRadius: 0,
+        textShadowOffset: {
+            height: 4,
+            widht: 4,
+        }
+    };
+
+    const textStyle = [styles.text, withShadow ? shadowStyle : {}, style];
+    const text = (
+        <Text
+            style={[
+                textStyle,
+                {fontSize: scaledFontSize}
+            ]}
+            {...otherProps}
+        >
+            {children}
+        </Text>
+    );
 };
 
-@inject(allStores => ({
-    navigateToPlayground: allStores.router.navigateToPlayground,
-    pressedTiles: allStores.game.pressedTiles,
-    score: allStores.game.score,
-}))
-
-@observer
-export default class Endgame extends Component<Props, Props, State> {
-    static defaultProps = {
-        pressedTiles: [],
-        navigateToPlayground: () => null,
-        score: 0,
-    };
-
-    _containerRef: any;
-    _contentRef: any;
-
-    state = {
-        buttonColor: boardUtils.getRandomTileColor(),
-        hasPressedButton: false,
-    };
-
-    _handleRestartPress = async () => {
-        this.setState({ hasPressedButton: true });
-        await this._contentRef.fadeOut(300);
-        await this._containerRef.zoommOut();
-        this.props.navigateToPlayground();
-    };
-
-    render() {
-        const { buttonColor, hasPressedButton } = this.state;
-        const size = metrics.DEVICE_HEIGHT * 1.3;
-        const containerStyle = {
-            position: 'absolute',
-            bottom: metrics.DEVICE_HEIGHT / 2 - size / 2,
-            left: metrics.DEVICE_WIDTH / 2 - size / 2,
-            height: size,
-            width: size,
-            borderRadius: size / 2,
-            justifyContent: 'center',
-            alignItems: 'center',
-        };
-
-
-        return (
-            <View
-                ref={ref => this._containerRef = ref}
-                style={[styles.container, containerStyle]}
-                pointerE$vents={'box-none'}
-                animation={'zoomIn'}
-                duration={500}
-            >
-                <View
-                    ref={ref => this._contentRef = ref}
-                    style={styles.content}
-                >
-                    <View style={styles.header}>
-
-                    </View>
-                    <View style={styles.body}>
-
-                    </View>
-                </View>
-            </View>
-        );
-    }
-
-}
+export default CustomText;

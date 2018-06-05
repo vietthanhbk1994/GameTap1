@@ -7,80 +7,35 @@ import {View, TouchableNativeFeedback, TouchableOpacity} from 'react-native';
 import env from '../../config/env';
 
 type Props = {
-    navigateToPlayground: () => any,
-    score: number,
+    isRippleDisabled?: boolean,
+    rippleColor?: string,
+    children?: ?Element<any>,
+    style?: any,
 };
 
-type State = {
-    buttonColor: string,
-    hasPressedButton: boolean,
-};
+const TouchableView = (props: Props): Element<any> => {
+    const {isRippleDisabled, rippleColor, children, style, ...otherProps} = props;
 
-@inject(allStores => ({
-    navigateToPlayground: allStores.router.navigateToPlayground,
-    pressedTiles: allStores.game.pressedTiles,
-    score: allStores.game.score,
-}))
-
-@observer
-export default class Endgame extends Component<Props, Props, State> {
-    static defaultProps = {
-        pressedTiles: [],
-        navigateToPlayground: () => null,
-        score: 0,
-    };
-
-    _containerRef: any;
-    _contentRef: any;
-
-    state = {
-        buttonColor: boardUtils.getRandomTileColor(),
-        hasPressedButton: false,
-    };
-
-    _handleRestartPress = async () => {
-        this.setState({ hasPressedButton: true });
-        await this._contentRef.fadeOut(300);
-        await this._containerRef.zoommOut();
-        this.props.navigateToPlayground();
-    };
-
-    render() {
-        const { buttonColor, hasPressedButton } = this.state;
-        const size = metrics.DEVICE_HEIGHT * 1.3;
-        const containerStyle = {
-            position: 'absolute',
-            bottom: metrics.DEVICE_HEIGHT / 2 - size / 2,
-            left: metrics.DEVICE_WIDTH / 2 - size / 2,
-            height: size,
-            width: size,
-            borderRadius: size / 2,
-            justifyContent: 'center',
-            alignItems: 'center',
-        };
-
-
+    if (env.IS_MATERIAL_DESIGN_SUPPORTED && !isRippleDisabled) {
+        const background = TouchableNativeFeedback.Ripple(rippleColor, false);
         return (
-            <View
-                ref={ref => this._containerRef = ref}
-                style={[styles.container, containerStyle]}
-                pointerE$vents={'box-none'}
-                animation={'zoomIn'}
-                duration={500}
+            <TouchableNativeFeedback
+                {...otherProps}
+                bacground={background}
             >
-                <View
-                    ref={ref => this._contentRef = ref}
-                    style={styles.content}
-                >
-                    <View style={styles.header}>
-
-                    </View>
-                    <View style={styles.body}>
-
-                    </View>
-                </View>
-            </View>
+                <View style={style}>{children}</View>
+            </TouchableNativeFeedback>
+        );
+    } else {
+        return (
+            <TouchableOpacity
+                {...otherProps}
+                style={style}
+            >
+                {children}
+            </TouchableOpacity>
         );
     }
+};
 
-}
+export default TouchableView;

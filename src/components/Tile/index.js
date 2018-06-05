@@ -6,11 +6,11 @@
  */
 import React, {Component} from 'react';
 import {View} from 'react-native-animatable';
-import {inject, observer} from 'mobx-react/native';
+import {observer} from 'mobx-react/native';
+import {LayoutAnimation, TouchableWithoutFeedback} from 'react-native';
+import CustomText from '../CustomText';
+import colorUtils from '../../utils/colorUtils';
 import metrics from '../../config/metrics';
-import Tile from '../../components/Tile';
-import CustomText from '../../components/CustomText';
-import boardUtils from '../../utils/boardUtils';
 import audioService from '../../services/audio';
 import styles from './index.style';
 
