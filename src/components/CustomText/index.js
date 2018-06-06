@@ -26,7 +26,7 @@ const CustomText = (props: Props): Element<any> => {
         textShadowRadius: 0,
         textShadowOffset: {
             height: 4,
-            widht: 4,
+            width: 4,
         }
     };
 
@@ -42,6 +42,8 @@ const CustomText = (props: Props): Element<any> => {
             {children}
         </Text>
     );
+
+    return onPress ? <TouchableView onPress={onPress}>{text}</TouchableView> : text;
 };
 
 export default CustomText;

@@ -15,79 +15,111 @@ import audioService from '../../services/audio';
 import styles from './index.style';
 
 type Props = {
-    navigateToPlayground: () => any,
-    score: number,
+    depth: number,
+    isEnabled?: boolean,
+    backgroundColor: string,
+    borderRadius: number,
+    text: string | number,
+    playSound: () => any,
+    textStyle?: any,
+    singlePressOnly?: boolean,
+    onPressIn?: 90 => anny,
+    onPressOut?: () => any,
+    style?: any,
 };
 
 type State = {
-    buttonColor: string,
-    hasPressedButton: boolean,
+    isTouched: boolean,
+    hasBeenPressed: boolean,
 };
 
-@inject(allStores => ({
-    navigateToPlayground: allStores.router.navigateToPlayground,
-    pressedTiles: allStores.game.pressedTiles,
-    score: allStores.game.score,
-}))
-
 @observer
-export default class Endgame extends Component<Props, Props, State> {
+export default class BoardTile extends Component<Props, Props, State> {
     static defaultProps = {
-        pressedTiles: [],
-        navigateToPlayground: () => null,
-        score: 0,
+        depth: metrics.TILE_SHADOW_DEPTH,
+        backgroundColor: 'red',
+        borderRadius: metrics.TILE_BORDER_RADIUS,
+        text: '1',
+        isEnabled: true,
+        singlePressOnly: true,
+        playSound: audioService.playSuccessSound,
     };
-
-    _containerRef: any;
-    _contentRef: any;
 
     state = {
-        buttonColor: boardUtils.getRandomTileColor(),
-        hasPressedButton: false,
+        isTouched: false,
+        hasBeenPressed: false,
     };
 
-    _handleRestartPress = async () => {
-        this.setState({ hasPressedButton: true });
-        await this._contentRef.fadeOut(300);
-        await this._containerRef.zoommOut();
-        this.props.navigateToPlayground();
+    _containerRef = null;
+
+    getContainerRef = () => this._containerRef;
+
+    _handlePressIn = () => {
+        const {isEnabled, singlePressOnly, onPressIn, playSound} = this.props;
+        if (isEnabled) return;
+        if (singlePressOnly && this.state.hasBeenPressed) return; // Prevent double presses
+        playSound();
+        LayoutAnimation.spring(); // Animate the tile Press
+        this.setState({ isTouched: true });
+
+        if (onPressIn) {
+            onPressIn();
+        }
+
+        return true;
+    };
+
+    _handlePressOut = () => {
+        const {isEnabled, singlePressOnly, onPressOut} = this.state;
+        if (!isEnabled) return;
+        if (singlePressOnly && this.state.hasBeenPressed) return;
+
+        if (onPressOut) {
+            onPressOut();
+        }
+        this.setState({
+            isTouched: false,
+            hasBeenPressed: true,
+        });
+
     };
 
     render() {
-        const { buttonColor, hasPressedButton } = this.state;
-        const size = metrics.DEVICE_HEIGHT * 1.3;
-        const containerStyle = {
-            position: 'absolute',
-            bottom: metrics.DEVICE_HEIGHT / 2 - size / 2,
-            left: metrics.DEVICE_WIDTH / 2 - size / 2,
-            height: size,
-            width: size,
-            borderRadius: size / 2,
-            justifyContent: 'center',
-            alignItems: 'center',
+        const { depth, borderRadius, backgroundColor, text, textStyle, style, ...otherProps } = this.props;
+        const { isTouched } = this.state;
+        const halfDepth = depth / 2;
+        const titleStyle = {
+            marginTop: isTouched ? depth : halfDepth,
+            backgroundColor,
+            borderRadius,
         };
 
+        const depthStyle = {
+            marginTop: -borderRadius,
+            height: isTouched ? halfDepth + borderRadius : depth + borderRadius,
+            backgroundColor: colorUtils.getDifferentLuminance(backgroundColor, -0.2),
+            borderBottomLeftRadius: borderRadius,
+            borderBottomRightRadius: borderRadius,
+        };
 
         return (
-            <View
-                ref={ref => this._containerRef = ref}
-                style={[styles.container, containerStyle]}
-                pointerE$vents={'box-none'}
-                animation={'zoomIn'}
-                duration={500}
+            <TouchableWithoutFeedback
+                onPressIn={this._handlePressIn}
+                onPressOut={this._handlePressOut}
+                delayPressIn={0}
             >
                 <View
-                    ref={ref => this._contentRef = ref}
-                    style={styles.content}
+                    ref={ref => this._containerRef = ref}
+                    {...otherProps}
                 >
-                    <View style={styles.header}>
-
+                    <View style={[styles.tile, titleStyle, style ]}>
+                        <CustomText style={[styles.text, textStyle]}>
+                            {text}
+                        </CustomText>
                     </View>
-                    <View style={styles.body}>
-
-                    </View>
+                    <View style={[styles.depth, depthStyle]}/>
                 </View>
-            </View>
+            </TouchableWithoutFeedback>
         );
     }
 

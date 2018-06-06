@@ -2,7 +2,7 @@
 import {StyleSheet} from 'react-native';
 
 export default StyleSheet.create({
-    title: {
+    tile: {
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: 2,
