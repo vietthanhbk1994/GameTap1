@@ -21,7 +21,7 @@ type Props = {
 }))
 
 @observer
-export default class App extends Component<Props, Props, void> {
+export default class AppContainer extends Component<Props, Props, void> {
     static defaultProps = {
         currentScreen: 'HOME',
     };

@@ -80,10 +80,28 @@ export default class Endgame extends Component<Props, Props, State> {
                     style={styles.content}
                 >
                     <View style={styles.header}>
-
+                        <CustomText
+                            style={styles.scoreText}
+                            withShadow={true}
+                            animation={'bounceIn'}
+                            delay={700}
+                        >
+                            {this.props.score}
+                        </CustomText>
                     </View>
                     <View style={styles.body}>
-
+                        <Tile
+                            animation={'bounceIn'}
+                            delay={900}
+                            depth={metrics.TILE_SHADOW_DEPTH}
+                            backgroundColor={buttonColor}
+                            text={'RESTART'}
+                            onPressOut={() => this._handleRestartPress()}
+                            style={styles.button}
+                            textStyle={styles.buttonText}
+                            isEnabled={!hasPressedButton}
+                            playSound={audioService.playButtonSound}
+                        />
                     </View>
                 </View>
             </View>
