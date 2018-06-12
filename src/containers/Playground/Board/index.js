@@ -1,7 +1,6 @@
 // @flow
 /**
- * The core of the game
- * It links the Board to the MobX store and navigate to the EndGame if need
+ * This component just renders the tiles in theri correct position
  */
 import React, {Component} from 'react';
 import {View} from 'react-native-animatable';
