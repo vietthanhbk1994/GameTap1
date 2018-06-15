@@ -6,7 +6,7 @@
 import React, { Element } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text } from 'react-native-animatable';
-import TouchableView from 'src/components/TouchableView';
+import TouchableView from '../TouchableView';
 import metrics from '../../config/metrics';
 import styles from './index.style';
 

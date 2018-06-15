@@ -1,50 +1,53 @@
 // @flow
 /**
- * This component just renders the tiles in theri correct position
+ * This component just renders the tiles in their correct position
  */
-import React, {Component} from 'react';
-import {View} from 'react-native-animatable';
-import {Animated, Easing} from 'react-native';
+import React, { Component } from 'react';
+import { View } from 'react-native-animatable';
+import type { Tile } from '../../../types';
+import { observer } from 'mobx-react/native';
+import BoardTile from '../BoardTile';
 import styles from './index.style';
-import timings from '../../../config/timings';
-import metrics from '../../../config/metrics';
 
-type State = {
-    animateValue: any,
+type Props = {
+    tiles: Array<Tile>,
+    onTilePress: (tileId: any) => any,
+    isEnabled: boolean,
 };
 
-export default class TimeBar extends Component<void, {}, State> {
-    state = {
-        animateValue: new Animated.Value(timings.TIME_LIMIT_MS),
+@observer
+export default class TilesCarousel extends Component<void, Props, void> {
+    _tileRefs = [];
+
+    animateFailure = () => {
+        this._tileRefs.forEach(ref => {
+            if (ref) {
+                ref.animateFailure();
+            }
+        })
     };
 
-    componentDidMount() {
-        Animated.timing(this.state.animateValue, {
-            duration: timings.TIME_LIMIT_MS,
-            easing: Easing.linear, // No easing
-            toValue: 0,
-        }).start();
-    }
-
     render() {
-        // Animate the TimeBar color from grey to red, starting when there are left only 12 seconds
-        const backgroundColor = this.state.animateValue.interpolate({
-            inputRange: [0, timings.TIME_LIMIT_MS * 0.4, timings.TIME_LIMIT_MS],
-            outputRange: ['rgba(255,0,0, 1)', 'rgba(0,0,0, 0.3)', 'rgba(0,0,0, 0.3)'],
-        });
-
-        //Animate the TimeBar width from DEVICE_WIDTH to 0 in TIME_LIMIT_MS (which currently is 30 seconds)
-        const width = this.state.animateValue.interpolate({
-            inputRange: [0, timings.TIME_LIMIT_MS],
-            outputRange: [0, metrics.DEVICE_WIDTH]
-        });
+        this._tileRefs = [];
         return (
             <View
                 style={styles.container}
             >
-                <View
-                    style={[styles.content, {width, backgroundColor}]}
-                />
+                {
+                    this.props.tiles.map((tile, index) => (
+                        <BoardTile
+                            ref={ref => this._tileRefs[index] = ref}
+                            key={`board_tile_${tile.id}`}
+                            left={tile.x}
+                            bottom={tile.y}
+                            backgroundColor={tile.color}
+                            text={tile.number}
+                            onTilePress={() => this.props.onTilePress(tile.id)}
+                            isEnabled={this.props.isEnabled}
+                            isVisible={tile.isVisible}
+                        />
+                    ))
+                }
             </View>
         );
     }
